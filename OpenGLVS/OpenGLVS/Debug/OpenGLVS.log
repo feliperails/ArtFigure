@@ -1,0 +1,13 @@
+﻿  main.cpp
+c:\felipe\openglroot\openglvs\openglvs\main.cpp(22): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+c:\felipe\openglroot\openglvs\openglvs\main.cpp(182): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
+c:\felipe\openglroot\openglvs\openglvs\main.cpp(219): warning C4018: '<': signed/unsigned mismatch
+c:\felipe\openglroot\openglvs\openglvs\main.cpp(275): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
+c:\felipe\openglroot\openglvs\openglvs\main.cpp(276): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
+c:\felipe\openglroot\openglvs\openglvs\main.cpp(280): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
+c:\felipe\openglroot\openglvs\openglvs\main.cpp(281): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
+c:\felipe\openglroot\openglvs\openglvs\main.cpp(283): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
+c:\felipe\openglroot\openglvs\openglvs\main.cpp(284): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
+c:\felipe\openglroot\openglvs\openglvs\main.cpp(292): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+  OpenGLVS.vcxproj -> C:\Felipe\OpenGLRoot\OpenGLVS\Debug\OpenGLVS.exe
+  OpenGLVS.vcxproj -> C:\Felipe\OpenGLRoot\OpenGLVS\Debug\OpenGLVS.pdb (Partial PDB)
