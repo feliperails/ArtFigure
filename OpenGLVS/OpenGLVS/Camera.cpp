@@ -11,7 +11,7 @@ Camera::Camera(Display* display) {
 	// Options, removes the mouse cursor for a more immersive experience
 	// glfwSetInputMode(this->display->getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-	this->initCamera(glm::vec3(0.0f, 0.0f, 3.0f));
+	this->initCamera(glm::vec3(0.0f, 0.0f, 30.0f));
 }
 
 void Camera::updateCameraVectors()

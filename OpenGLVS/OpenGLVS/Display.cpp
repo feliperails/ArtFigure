@@ -31,6 +31,30 @@ void Display::init(GLuint width, GLuint height, string title) {
 	glfwGetFramebufferSize(this->window, &this->screenWidth, &this->screenHeight);
 }
 
+void Display::initGL() {
+	if (GLEW_OK != glewInit())
+	{
+		throw new DisplayGLException;
+	}
+
+	/*
+	const GLubyte* renderer = glGetString(GL_RENDERER);
+	const GLubyte* version = glGetString(GL_VERSION);
+	printf("Renderer: %s\n", renderer);
+	printf("OpenGL (versao suportada) %s\n", version);
+	*/
+
+	// Define the viewport dimensions
+	glViewport(0, 0, this->width, this->height);
+
+	// Setup some OpenGL options
+	glEnable(GL_DEPTH_TEST);
+
+	// enable alpha support
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+}
+
 GLuint Display::getWidth() {
 	return this->width;
 }

@@ -1,3 +1,6 @@
+#pragma once
+
+#include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <string>
 #include <exception>
@@ -12,7 +15,14 @@ class DisplayException : public exception
 	}
 };
 
-#pragma once
+class DisplayGLException : public exception
+{
+	virtual const char* what() const throw()
+	{
+		return "Failed to initialize GLEW";
+	}
+};
+
 class Display {
 public:
 	int screenWidth;
@@ -20,6 +30,7 @@ public:
 
 	Display();
 	void init(GLuint width, GLuint height, string title);
+	void initGL();
 	GLuint getWidth();
 	GLuint getHeight();
 	GLFWwindow* getWindow();
