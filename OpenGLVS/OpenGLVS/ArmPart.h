@@ -1,20 +1,18 @@
 #pragma once
 
-#include "GL/glew.h"
-
 class ArmPart
 {
 public:
 	ArmPart();
-	ArmPart(GLuint size, GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha);
+	ArmPart(int size, float red, float green, float blue, float alpha);
 	~ArmPart();
 
-	void setSize(GLuint size);
-	void setColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha);
-	GLuint getSize();
-	GLfloat* getColor();
+	void setSize(int size);
+	void setColor(float red, float green, float blue, float alpha);
+	int getSize();
+	float* getColor();
 private:
-	GLuint size;
-	GLfloat color[4];
+	int size;
+	float color[4];
 };
 

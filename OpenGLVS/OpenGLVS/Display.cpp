@@ -27,7 +27,7 @@ void Display::init(GLuint width, GLuint height, string title) {
 	}
 
 	glfwMakeContextCurrent(this->window);
-
+	glfwSwapInterval(1);
 	glfwGetFramebufferSize(this->window, &this->screenWidth, &this->screenHeight);
 }
 

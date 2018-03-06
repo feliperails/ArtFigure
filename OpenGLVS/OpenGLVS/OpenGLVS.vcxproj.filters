@@ -21,19 +21,19 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Display.cpp">
+    <ClCompile Include="Arm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
+    <ClCompile Include="ArmPart.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Display.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ArtPicture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Arm.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ArmPart.cpp">
+    <ClCompile Include="Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Mesh.cpp">
@@ -44,19 +44,19 @@
     <ClInclude Include="ShaderTest.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.h">
+    <ClInclude Include="Arm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Display.h">
+    <ClInclude Include="ArmPart.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ArtPicture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Arm.h">
+    <ClInclude Include="Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ArmPart.h">
+    <ClInclude Include="Display.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Mesh.h">
@@ -68,7 +68,13 @@
     <None Include="res\shaders\core.vs">
       <Filter>Resource Files\shaders</Filter>
     </None>
-    <None Include="res\shaders\core.frag">
+    <None Include="res\shaders\circle.fs">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="res\shaders\circle.vs">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="res\shaders\core.fs">
       <Filter>Resource Files\shaders</Filter>
     </None>
   </ItemGroup>
