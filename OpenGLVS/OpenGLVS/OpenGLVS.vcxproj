@@ -121,6 +121,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Arm.cpp" />
+    <ClCompile Include="ArmMovement.cpp" />
     <ClCompile Include="ArmPart.cpp" />
     <ClCompile Include="ArtPicture.cpp" />
     <ClCompile Include="Camera.cpp" />
@@ -130,6 +131,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Arm.h" />
+    <ClInclude Include="ArmMovement.h" />
     <ClInclude Include="ArmPart.h" />
     <ClInclude Include="ArtPicture.h" />
     <ClInclude Include="Camera.h" />

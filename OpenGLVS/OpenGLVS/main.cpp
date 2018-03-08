@@ -8,6 +8,9 @@
 // GLFW
 #include <GLFW/glfw3.h>
 
+#define _USE_MATH_DEFINES
+#include <math.h>
+
 // GL includes
 #include "ShaderTest.h"
 
@@ -23,6 +26,8 @@
 #include "Arm.h";
 #include "ArtPicture.h";
 
+#define MINIMUM_VALUE(x, y) ((x) < (y) ? (x) : (y))
+
 // Properties
 
 GLfloat lastFrame = 0.0f;
@@ -32,6 +37,15 @@ Camera* camera;
 void keyCallback(GLFWwindow *window, int key, int scancode, int action, int mode);
 void mouseCallback(GLFWwindow *window, double xPos, double yPos);
 void scrollCallback(GLFWwindow *window, double xOffset, double yOffset);
+
+float startAngle = 0;
+float startTime;
+float endTime;
+float duration = 2;
+float currentTime;
+unsigned int movIndex = 0;
+bool started = false;
+vector<ArmMovement*>* movements;
 
 int main()
 {
@@ -45,7 +59,7 @@ int main()
 		arm->add(new ArmPart(1, 0.0f, 0.0f, 1.0f, 1.0f));
 		arm->setTarget(2, 7, 0);
 
-		vector<double>* movements = arm->getMovements();
+		movements = arm->getMovements();
 
 		glewExperimental = GL_TRUE;
 
@@ -93,12 +107,18 @@ int main()
 		while (!glfwWindowShouldClose(window))
 		{
 			// Set frame time
-			GLfloat currentFrame = glfwGetTime();
-			lastFrame = currentFrame;
+			currentTime = glfwGetTime();
+			lastFrame = currentTime;
+			
+			if (!started) {
+				started = true;
+				startTime = currentTime;
+				endTime = startTime + duration;
+			}
 
 			// Check and call events
 			glfwPollEvents();
-			camera->DoMovement(currentFrame - lastFrame);
+			camera->DoMovement(currentTime - lastFrame);
 
 			// Clear the colorbuffer
 			glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -123,22 +143,47 @@ int main()
 			glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 			glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
-			GLuint i = 0;
-			double time = glfwGetTime();
-			for (Mesh* &mesh : meshList)
+			// Fix angles
+			int limit = arm->getParts()->size();
+			for (int i = 0; i < movIndex; i++)
 			{
+				ArmMovement* movement = movements->at(i);
+
+				for (int j = 0; j < movement->endPoint; j++)
+				{
+					Mesh* mesh = meshList.at(j);
+
+					mesh->bind();
+
+					glm::mat4 model;
+					model = glm::translate(model, movement->pointAngle);
+					model = glm::rotate(model, movement->endAngle, glm::vec3(0.0f, 0.0f, 1.0f));
+					model = glm::translate(model, movement->points.at(j));
+					glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+
+					mesh->draw();
+				}
+			}
+
+			// Movement angle
+			ArmMovement* movement = movements->at(movIndex);
+			float anglePrev = 0.0f;
+			for (int j = movement->startPoint; j < movement->endPoint; j++)
+			{
+				Mesh* mesh = meshList.at(j);
+
 				mesh->bind();
 
-				// Calculate the model matrix for each object and pass it to shader before drawing
 				glm::mat4 model;
-				// model = glm::translate(model, cubePositions[i]);
-				GLfloat angle = time;
-				model = glm::rotate(model, angle, glm::vec3(0.0f, 0.0f, 0.5f));
+				model = glm::translate(model, movement->pointAngle);
+				float angle = (MINIMUM_VALUE(currentTime, endTime) - startTime) / duration * movement->angled + movement->startAngle;
+				model = glm::rotate(model, angle, glm::vec3(0.0f, 0.0f, 1.0f));
+				model = glm::translate(model, movement->points.at(j));
 				glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 
 				mesh->draw();
 
-				i++;
+				anglePrev = angle;
 			}
 
 			glBindVertexArray(0);
@@ -164,6 +209,15 @@ void keyCallback(GLFWwindow *window, int key, int scancode, int action, int mode
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 	{
 		glfwSetWindowShouldClose(window, GL_TRUE);
+	}
+	else if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
+	{
+		movements->at(movIndex)->endPoint = movements->at(movIndex + 1)->startPoint;
+		movIndex++;
+		duration = movements->at(movIndex)->angled / (2 * M_PI) * 10;
+		startTime = currentTime;
+		endTime = startTime + duration;
+		cout << "SPACE \n";
 	}
 
 	if (key >= 0 && key < 1024)

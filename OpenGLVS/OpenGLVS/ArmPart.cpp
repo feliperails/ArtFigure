@@ -35,6 +35,18 @@ float* ArmPart::getColor()
 	return this->color;
 }
 
+void ArmPart::setPoint(float x, float y, float z)
+{
+	this->point.x = x;
+	this->point.y = y;
+	this->point.z = z;
+}
+
+glm::vec3 ArmPart::getPoint()
+{
+	return this->point;
+}
+
 ArmPart::~ArmPart()
 {
 }
