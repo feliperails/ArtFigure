@@ -4,6 +4,10 @@
 
 #define _USE_MATH_DEFINES
 #include <math.h>
+// GLM Mathemtics
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #define X 0
 #define Y 1
@@ -32,11 +36,15 @@ vector<ArmPart*>* Arm::getParts()
 	return this->parts;
 }
 
-void Arm::setTarget(double x, double y, double z)
+void Arm::setTarget(double x, double y, double z, float r, float g, float b, float a)
 {
-	this->target[X] = x;
-	this->target[Y] = y;
-	this->target[Z] = z;
+	this->target.x = x;
+	this->target.y = y;
+	this->target.z = z;
+	this->targetColor.r = r;
+	this->targetColor.g = g;
+	this->targetColor.b = b;
+	this->targetColor.a = a;
 }
 
 bool Arm::inCircle(double centerX, double centerY, double centerZ, double radius, double pointX, double pointY, double pointZ)
@@ -98,7 +106,7 @@ vector<ArmMovement*>* Arm::getMovements()
 	bool radiusDetect = false;
 	for (int i = partsLength - 1; i >= 0; i--)
 	{
-		if (this->inCircle(points->at(i)[X], points->at(i)[Y], points->at(i)[Z], radiusList[i], this->target[X], this->target[Y], this->target[Z]))
+		if (this->inCircle(points->at(i)[X], points->at(i)[Y], points->at(i)[Z], radiusList[i], this->target.x, this->target.y, this->target.z))
 		{
 			positionCenterDetect = i;
 			radiusDetect = true;
@@ -132,7 +140,7 @@ vector<ArmMovement*>* Arm::getMovements()
 		double* point = points->at(i);
 		double* pointSecond = points->at(i + 1);
 		double* pointLast = points->at(partsLength);
-		termOne = this->getSquareDistance(point[X], point[Y], point[Z], this->target[X], this->target[Y], this->target[Z]);
+		termOne = this->getSquareDistance(point[X], point[Y], point[Z], this->target.x, this->target.y, this->target.z);
 		termTwo = this->getSquareDistance(point[X], point[Y], point[Z], pointSecond[X], pointSecond[Y], pointSecond[Z]);
 		triangleAngle = acos((termOne + termTwo - this->getSquareDistance(pointSecond[X], pointSecond[Y], pointSecond[Z], pointLast[X], pointLast[Y], pointLast[Z])) /
 			(2 * sqrt(termOne) * sqrt(termTwo)));
@@ -142,9 +150,9 @@ vector<ArmMovement*>* Arm::getMovements()
 		v[Y] = pointSecond[Y] - point[Y];
 		v[Z] = pointSecond[Z] - point[Z];
 		double* e = new double[3];
-	 	e[X] = this->target[X] - point[X];
-		e[Y] = this->target[Y] - point[Y];
-		e[Z] = this->target[Z] - point[Z];
+	 	e[X] = this->target.x - point[X];
+		e[Y] = this->target.y - point[Y];
+		e[Z] = this->target.z - point[Z];
 		armAngle = acos((e[X] * v[X] + e[Y] * v[Y] + e[Z] * v[Z]) / (sqrt(SQUARED(e[X]) + SQUARED(e[Y]) + SQUARED(e[Z])) * sqrt(SQUARED(v[X]) + SQUARED(v[Y]) + SQUARED(v[Z]))));
 
 		finalAngle = armAngle - triangleAngle;
@@ -235,4 +243,13 @@ void Arm::applyAngleOnPoints(vector<double*>* points, int startPoint, double* un
 	{
 		std::cout << points->at(i)[X] << ", " << points->at(i)[Y] << ", " << points->at(i)[Z] << "\n";
 	}
+}
+
+glm::vec3 Arm::getTarget()
+{
+	return this->target;
+}
+glm::vec4 Arm::getTargetColor()
+{
+	return this->targetColor;
 }

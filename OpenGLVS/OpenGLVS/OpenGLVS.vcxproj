@@ -120,21 +120,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AbstractFigure.cpp" />
     <ClCompile Include="Arm.cpp" />
     <ClCompile Include="ArmMovement.cpp" />
     <ClCompile Include="ArmPart.cpp" />
     <ClCompile Include="ArtPicture.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CartesianSpace.cpp" />
     <ClCompile Include="Display.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mesh.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AbstractFigure.h" />
     <ClInclude Include="Arm.h" />
     <ClInclude Include="ArmMovement.h" />
     <ClInclude Include="ArmPart.h" />
     <ClInclude Include="ArtPicture.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="CartesianSpace.h" />
     <ClInclude Include="Display.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="ShaderTest.h" />

@@ -6,10 +6,11 @@
 #include "Arm.h";
 #include "ArmPart.h";
 #include "Mesh.h";
+#include "AbstractFigure.h";
 
 using namespace std;
 
-class ArtPicture
+class ArtPicture : public AbstractFigure
 {
 public:
 	ArtPicture();
@@ -17,12 +18,14 @@ public:
 
 	void build();
 	void setArm(Arm* arm);
-	void initMesh();
-	vector<Mesh*>* getMeshList();
-	void finishMesh();
+	void initPointMesh();
+	vector<Mesh*>* getPointMeshList();
+	void finishPointMesh();
 private:
-	vector<Mesh*>* meshList;
-
 	Arm* arm;
+	vector<Mesh*>* pointMeshList;
+
+	void buildParts();
+	void buildTarget();
 };
 

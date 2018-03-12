@@ -25,6 +25,7 @@
 #include "Camera.h";
 #include "Arm.h";
 #include "ArtPicture.h";
+#include "CartesianSpace.h";
 
 #define MINIMUM_VALUE(x, y) ((x) < (y) ? (x) : (y))
 
@@ -52,12 +53,16 @@ int main()
 	try
 	{
 		ArtPicture* artPicture = new ArtPicture();
+		CartesianSpace* cartesianSpace = new CartesianSpace();
+		cartesianSpace->build();
 
 		Arm* arm = new Arm();
-		arm->add(new ArmPart(6, 0.0f, 0.0f, 0.0f, 1.0f));
+		arm->add(new ArmPart(6, 1.0f, 0.0f, 0.0f, 1.0f));
 		arm->add(new ArmPart(2, 0.0f, 1.0f, 0.0f, 1.0f));
 		arm->add(new ArmPart(1, 0.0f, 0.0f, 1.0f, 1.0f));
-		arm->setTarget(2, 7, 0);
+		arm->setTarget(-1.0f, 3.0f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f);
+
+		glm::vec3 rotateXY = glm::vec3(0.0f, 0.0f, 1.0f);
 
 		movements = arm->getMovements();
 
@@ -86,23 +91,15 @@ int main()
 
 		GLfloat target[] = { 2.0f, 2.0f };
 
-		glm::vec3 cubePositions[] =
-		{
-			glm::vec3(0.0f, 0.0f, 0.0f)
-			, glm::vec3(2.0f, 2.0f, 0.0f)
-			, glm::vec3(4.0f, 4.0f, 0.0f)
-			, glm::vec3(-3.8f, -2.0f, -12.3f)
-			, glm::vec3(2.4f, -0.4f, -3.5f)
-			, glm::vec3(-1.7f, 3.0f, -7.5f)
-			, glm::vec3(1.3f, -2.0f, -2.5f)
-			, glm::vec3(1.5f, 2.0f, -2.5f)
-			, glm::vec3(1.5f, 0.2f, -1.5f)
-			, glm::vec3(-1.3f, 1.0f, -1.5f)
-		};
-
 		artPicture->initMesh();
+		artPicture->initPointMesh();
+		cartesianSpace->initMesh();
 
+		vector<Mesh*> cartesianMeshList = *cartesianSpace->getMeshList();
 		vector<Mesh*> meshList = *artPicture->getMeshList();
+		vector<Mesh*> pointMeshList = *artPicture->getPointMeshList();
+
+		GLfloat projectionAspect = (GLfloat)display->screenWidth / (GLfloat)display->screenHeight;
 
 		while (!glfwWindowShouldClose(window))
 		{
@@ -121,14 +118,14 @@ int main()
 			camera->DoMovement(currentTime - lastFrame);
 
 			// Clear the colorbuffer
-			glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+			glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 			// Draw our first triangle
 			ourShader.Use();
 
 			glm::mat4 projection;
-			projection = glm::perspective(camera->GetZoom(), (GLfloat)display->screenWidth / (GLfloat)display->screenHeight, 0.1f, 1000.0f);
+			projection = glm::perspective(camera->GetZoom(), projectionAspect, 0.1f, 1000.0f);
 
 			// Create camera transformation
 			glm::mat4 view;
@@ -157,7 +154,7 @@ int main()
 
 					glm::mat4 model;
 					model = glm::translate(model, movement->pointAngle);
-					model = glm::rotate(model, movement->endAngle, glm::vec3(0.0f, 0.0f, 1.0f));
+					model = glm::rotate(model, movement->endAngle, rotateXY);
 					model = glm::translate(model, movement->points.at(j));
 					glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 
@@ -177,13 +174,29 @@ int main()
 				glm::mat4 model;
 				model = glm::translate(model, movement->pointAngle);
 				float angle = (MINIMUM_VALUE(currentTime, endTime) - startTime) / duration * movement->angled + movement->startAngle;
-				model = glm::rotate(model, angle, glm::vec3(0.0f, 0.0f, 1.0f));
+				model = glm::rotate(model, angle, rotateXY);
 				model = glm::translate(model, movement->points.at(j));
 				glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 
 				mesh->draw();
 
 				anglePrev = angle;
+			}
+
+			for (Mesh* &mesh : cartesianMeshList)
+			{
+				mesh->bind();
+				glm::mat4 model;
+				glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+				mesh->draw();
+			}
+
+			for (Mesh* &mesh : pointMeshList)
+			{
+				mesh->bind();
+				glm::mat4 model;
+				glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+				mesh->draw();
 			}
 
 			glBindVertexArray(0);
@@ -193,6 +206,8 @@ int main()
 		}
 
 		artPicture->finishMesh();
+		artPicture->finishPointMesh();
+		cartesianSpace->finishMesh();
 		glfwTerminate();
 
 		return EXIT_SUCCESS;
