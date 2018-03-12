@@ -24,13 +24,13 @@ int ArmPart::getSize()
 
 void ArmPart::setColor(float red, float green, float blue, float alpha)
 {
-	this->color[0] = red;
-	this->color[1] = green;
-	this->color[2] = blue;
-	this->color[3] = alpha;
+	this->color.r = red;
+	this->color.g = green;
+	this->color.b = blue;
+	this->color.a = alpha;
 }
 
-float* ArmPart::getColor()
+glm::vec4 ArmPart::getColor()
 {
 	return this->color;
 }

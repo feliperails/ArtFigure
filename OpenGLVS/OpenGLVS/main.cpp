@@ -57,10 +57,11 @@ int main()
 		cartesianSpace->build();
 
 		Arm* arm = new Arm();
-		arm->add(new ArmPart(6, 1.0f, 0.0f, 0.0f, 1.0f));
-		arm->add(new ArmPart(2, 0.0f, 1.0f, 0.0f, 1.0f));
-		arm->add(new ArmPart(1, 0.0f, 0.0f, 1.0f, 1.0f));
-		arm->setTarget(-1.0f, 3.0f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f);
+		arm->add(new ArmPart(3, 1.0f, 0.0f, 0.0f, 1.0f));
+		arm->add(new ArmPart(4, 0.0f, 1.0f, 0.0f, 1.0f));
+		arm->add(new ArmPart(5, 0.0f, 0.0f, 1.0f, 1.0f));
+		arm->add(new ArmPart(7, 1.0f, 0.0f, 1.0f, 1.0f));
+		arm->setTarget(+5.0f, +15.0f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f);
 
 		glm::vec3 rotateXY = glm::vec3(0.0f, 0.0f, 1.0f);
 
@@ -195,6 +196,7 @@ int main()
 			{
 				mesh->bind();
 				glm::mat4 model;
+				model = glm::translate(model, arm->getTarget());
 				glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 				mesh->draw();
 			}

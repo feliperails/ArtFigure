@@ -7,6 +7,10 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#define _USE_MATH_DEFINES
+#include <math.h>
+
+#include "Util.h";
 #include "ArmPart.h";
 #include "ArmMovement.h";
 
@@ -39,8 +43,6 @@ private:
 	bool Arm::inCircle(double centerX, double centerY, double centerZ, double radius, double pointX, double pointY, double pointZ);
 	double Arm::getDistance(double point1X, double point1Y, double point1Z, double point2X, double point2Y, double point2Z);
 	double Arm::getSquareDistance(double point1X, double point1Y, double point1Z, double point2X, double point2Y, double point2Z);
-	double Arm::toDegrees(double angleRadians);
-	double* Arm::getUnitVector(double point1X, double point1Y, double point1Z, double point2X, double point2Y, double point2Z);
 	void applyAngleOnPoints(vector<double*>* points, int startPoint, double* unitVector);
 };
 

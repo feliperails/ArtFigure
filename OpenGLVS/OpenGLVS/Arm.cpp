@@ -2,16 +2,6 @@
 
 #include <iostream>
 
-#define _USE_MATH_DEFINES
-#include <math.h>
-// GLM Mathemtics
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
-#define X 0
-#define Y 1
-#define Z 2
 #define SQUARED(x)	(x)*(x)
 
 using namespace std;
@@ -69,17 +59,14 @@ vector<ArmMovement*>* Arm::getMovements()
 	vector<ArmMovement*>* movements = new vector<ArmMovement*>();
 	vector<double> radiusList(partsLength);
 
-	vector<double*>* points = new vector<double*>();
+	vector<glm::vec3>* points = new vector<glm::vec3>();
 
 	double sumRadius = 0.0f;
 	double sumCenter = 0.0f;
 
 	for (int i = 0, j = partsLength - 1; j >= 0; i++, j--)
 	{
-		double* point = new double[3];
-		point[X] = sumCenter;
-		point[Y] = 0.0f;
-		point[Z] = 0.0f;
+		glm::vec3 point = glm::vec3(sumCenter, 0.0f, 0.0f);
 		points->push_back(point);
 		this->parts->at(i)->setPoint(sumCenter, 0.0f, 0.0f);
 
@@ -90,23 +77,20 @@ vector<ArmMovement*>* Arm::getMovements()
 	}
 
 	{
-		double* point = new double[3];
-		point[X] = sumCenter;
-		point[Y] = 0.0f;
-		point[Z] = 0.0f;
+		glm::vec3 point = glm::vec3(sumCenter, 0.0f, 0.0f);
 		points->push_back(point);
 	}
 
 	for (int i = 0; i < partsLength; i++)
 	{
-		std::cout << points->at(i)[X] << ", " << points->at(i)[Y] << ", " << points->at(i)[Z] << " - " << radiusList[i] << "\n";
+		std::cout << points->at(i).x << ", " << points->at(i).y << ", " << points->at(i).z << " - " << radiusList[i] << "\n";
 	}
 
 	int positionCenterDetect;
 	bool radiusDetect = false;
 	for (int i = partsLength - 1; i >= 0; i--)
 	{
-		if (this->inCircle(points->at(i)[X], points->at(i)[Y], points->at(i)[Z], radiusList[i], this->target.x, this->target.y, this->target.z))
+		if (this->inCircle(points->at(i).x, points->at(i).y, points->at(i).z, radiusList[i], this->target.x, this->target.y, this->target.z))
 		{
 			positionCenterDetect = i;
 			radiusDetect = true;
@@ -137,29 +121,23 @@ vector<ArmMovement*>* Arm::getMovements()
 	double termOne, termTwo, triangleAngle, armAngle, finalAngle;
 	double startAngle = 0;
 	for (int i = positionCenterDetect; i < partsLength; i++) {
-		double* point = points->at(i);
-		double* pointSecond = points->at(i + 1);
-		double* pointLast = points->at(partsLength);
-		termOne = this->getSquareDistance(point[X], point[Y], point[Z], this->target.x, this->target.y, this->target.z);
-		termTwo = this->getSquareDistance(point[X], point[Y], point[Z], pointSecond[X], pointSecond[Y], pointSecond[Z]);
-		triangleAngle = acos((termOne + termTwo - this->getSquareDistance(pointSecond[X], pointSecond[Y], pointSecond[Z], pointLast[X], pointLast[Y], pointLast[Z])) /
+		glm::vec3 point = points->at(i);
+		glm::vec3 pointSecond = points->at(i + 1);
+		glm::vec3 pointLast = points->at(partsLength);
+		termOne = this->getSquareDistance(point.x, point.y, point.z, this->target.x, this->target.y, this->target.z);
+		termTwo = this->getSquareDistance(point.x, point.y, point.z, pointSecond.x, pointSecond.y, pointSecond.z);
+		triangleAngle = acos((termOne + termTwo - this->getSquareDistance(pointSecond.x, pointSecond.y, pointSecond.z, pointLast.x, pointLast.y, pointLast.z)) /
 			(2 * sqrt(termOne) * sqrt(termTwo)));
 
-		double* v = new double[3];
-		v[X] = pointSecond[X] - point[X];
-		v[Y] = pointSecond[Y] - point[Y];
-		v[Z] = pointSecond[Z] - point[Z];
-		double* e = new double[3];
-	 	e[X] = this->target.x - point[X];
-		e[Y] = this->target.y - point[Y];
-		e[Z] = this->target.z - point[Z];
-		armAngle = acos((e[X] * v[X] + e[Y] * v[Y] + e[Z] * v[Z]) / (sqrt(SQUARED(e[X]) + SQUARED(e[Y]) + SQUARED(e[Z])) * sqrt(SQUARED(v[X]) + SQUARED(v[Y]) + SQUARED(v[Z]))));
+		glm::vec3 v = glm::vec3(pointSecond.x - point.x, pointSecond.y - point.y, pointSecond.z - point.z);
+		glm::vec3 e = glm::vec3(this->target.x - point.x, this->target.y - point.y, this->target.z - point.z);
+		armAngle = acos((e.x * v.x + e.y * v.y + e.z * v.z) / (sqrt(SQUARED(e.x) + SQUARED(e.y) + SQUARED(e.z)) * sqrt(SQUARED(v.x) + SQUARED(v.y) + SQUARED(v.z))));
 
 		finalAngle = armAngle - triangleAngle;
 
-		std::cout << "triangleAngle: " << this->toDegrees(triangleAngle) << "\n";
-		std::cout << "armAngle: " << this->toDegrees(armAngle) << "\n";
-		std::cout << "finalAngle: " << this->toDegrees(finalAngle) << "\n";
+		std::cout << "triangleAngle: " << Util::toDegrees(triangleAngle) << "\n";
+		std::cout << "armAngle: " << Util::toDegrees(armAngle) << "\n";
+		std::cout << "finalAngle: " << Util::toDegrees(finalAngle) << "\n";
 
 		double* unitVector = new double[3];
 		unitVector[X] = cos(finalAngle);
@@ -202,24 +180,6 @@ vector<ArmMovement*>* Arm::getMovements()
 	return movements;
 }
 
-double Arm::toDegrees(double angleRadians)
-{
-	return angleRadians * 180 / M_PI;
-}
-
-double* Arm::getUnitVector(double point1X, double point1Y, double point1Z, double point2X, double point2Y, double point2Z)
-{
-	double x = point2X - point1X;
-	double y = point2Y - point1Y;
-	double z = point2Z - point2Z;
-
-	double size = sqrt(SQUARED(x) + SQUARED(y) + SQUARED(z));
-
-	double unitVector[3] = {x / size, y / size, z / size};
-
-	return unitVector;
-}
-
 void Arm::applyAngleOnPoints(vector<double*>* points, int startPoint, double* unitVector)
 {
 	int pointsSize = points->size();
@@ -231,12 +191,12 @@ void Arm::applyAngleOnPoints(vector<double*>* points, int startPoint, double* un
 	
 	for (int i = startPoint; i < pointsSize; i++)
 	{
-		double* point = points->at(i);
+		glm::vec3 point = points->at(i);
 		double* pointPrev = points->at(i - 1);
 
-		point[X] = pointPrev[X] + this->parts->at(i  - 1)->getSize() * unitVector[X];
-		point[Y] = pointPrev[Y] + this->parts->at(i - 1)->getSize() * unitVector[Y];
-		point[Z] = pointPrev[Z] + this->parts->at(i - 1)->getSize() * unitVector[Z];
+		point.x = pointPrev[X] + this->parts->at(i  - 1)->getSize() * unitVector[X];
+		point.y = pointPrev[Y] + this->parts->at(i - 1)->getSize() * unitVector[Y];
+		point.z = pointPrev[Z] + this->parts->at(i - 1)->getSize() * unitVector[Z];
 	}
 
 	for (int i = 0; i < points->size(); i++)

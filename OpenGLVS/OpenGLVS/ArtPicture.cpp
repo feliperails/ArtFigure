@@ -47,12 +47,12 @@ void ArtPicture::buildTarget()
 
 	GLfloat verticesData[] =
 	{
-		-0.2f, -0.2f, 0.0f, color.r, color.g, color.b, color.a,
-		+0.2f, -0.2f, 0.0f, color.r, color.g, color.b, color.a,
-		+0.2f, +0.2f, 0.0f, color.r, color.g, color.b, color.a,
-		+0.2f, +0.2f, 0.0f, color.r, color.g, color.b, color.a,
-		-0.2f, +0.2f, 0.0f, color.r, color.g, color.b, color.a,
-		-0.2f, -0.2f, 0.0f, color.r, color.g, color.b, color.a
+		-0.5f, -0.5f, -0.5f, color.r, color.g, color.b, color.a,
+		+0.5f, -0.5f, -0.5f, color.r, color.g, color.b, color.a,
+		+0.5f, +0.5f, -0.5f, color.r, color.g, color.b, color.a,
+		+0.5f, +0.5f, -0.5f, color.r, color.g, color.b, color.a,
+		-0.5f, +0.5f, -0.5f, color.r, color.g, color.b, color.a,
+		-0.5f, -0.5f, -0.5f, color.r, color.g, color.b, color.a
 	};
 
 	vector<GLfloat>* vertices = new vector<GLfloat>();
